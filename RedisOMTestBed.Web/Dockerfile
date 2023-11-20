@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Redis-OM-TestBed/Redis-OM-TestBed.Web.csproj", "Redis-OM-TestBed/"]
-RUN dotnet restore "./Redis-OM-TestBed/./Redis-OM-TestBed.Web.csproj"
+COPY ["RedisOMTestBed/RedisOMTestBed.Web.csproj", "RedisOMTestBed/"]
+RUN dotnet restore "./RedisOMTestBed/./RedisOMTestBed.Web.csproj"
 COPY . .
-WORKDIR "/src/Redis-OM-TestBed"
-RUN dotnet build "./Redis-OM-TestBed.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/RedisOMTestBed"
+RUN dotnet build "./RedisOMTestBed.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Redis-OM-TestBed.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./RedisOMTestBed.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Redis-OM-TestBed.Web.dll"]
+ENTRYPOINT ["dotnet", "RedisOMTestBed.Web.dll"]
