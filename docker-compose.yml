@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  redisomtestbed:
+    image: ${DOCKER_REGISTRY-}redisomtestbed
+    build:
+      context: .
+      dockerfile: Redis-OM-TestBed.Web/Dockerfile
+    depends_on:
+      - redisom
+    networks:
+      default:
+        aliases:
+          - RedisOMTestBed-App.home.clarkinc.biz
+  redisom:
+    image: redis/redis-stack:latest
+    volumes:
+      - ./logs:/data/logs
+      - ./data:/data
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      default:
+        aliases:
+          - RedisOMTestBed-Redis.home.clarkinc.biz
+
+networks:  
+  default:
+    external:
+      name: webstaurantstore_external
+      
